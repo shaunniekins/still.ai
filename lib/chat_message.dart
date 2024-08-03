@@ -19,9 +19,12 @@ class ChatMessage extends StatelessWidget {
             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isUser)
-            const CircleAvatar(
-              backgroundColor: Colors.teal,
-              child: Text('AI', style: TextStyle(color: Colors.white)),
+            CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/images/ai.png',
+                fit: BoxFit.cover,
+              ),
             ),
           Container(
             constraints: BoxConstraints(
@@ -30,10 +33,10 @@ class ChatMessage extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             margin: const EdgeInsets.only(left: 8.0, right: 8.0),
             decoration: BoxDecoration(
-              color: isUser ? Colors.blue[100] : Colors.grey[300],
+              color: isUser ? Colors.blue : Colors.teal,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(text),
+            child: Text(text, style: const TextStyle(color: Colors.white)),
           ),
           if (isUser)
             const CircleAvatar(

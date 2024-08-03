@@ -132,71 +132,69 @@ Remember, you're here to offer support and information about mental health, not 
               },
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      maxLines: 3,
-                      minLines: 1,
-                      textInputAction: TextInputAction.newline,
-                      keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your message...',
-                        counterText: '',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    maxLines: 3,
+                    minLines: 1,
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      hintText: 'Type your message...',
+                      counterText: '',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
-                      onSubmitted: (value) {
-                        _focusNode.requestFocus();
-                      },
-                      onTapAlwaysCalled: true,
-                      onTap: _scrollToBottom,
-                      onChanged: (_) => _scrollToBottom(),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        borderSide: BorderSide(color: Colors.teal),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        borderSide: BorderSide(color: Colors.teal),
+                      ),
+                      fillColor: Colors.transparent,
+                      filled: true,
                     ),
-                  ),
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: _controller,
-                    builder: (context, value, child) {
-                      return value.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.send),
-                              color: Colors.teal,
-                              onPressed: () {
-                                _sendMessage();
-                                _focusNode.requestFocus();
-                              },
-                            )
-                          : IconButton(
-                              icon: const Icon(Icons.emoji_emotions),
-                              color: Colors.teal,
-                              onPressed: () {
-                                FocusScope.of(context).unfocus();
-                              },
-                            );
+                    onSubmitted: (value) {
+                      _focusNode.requestFocus();
+                    },
+                    onTapAlwaysCalled: true,
+                    onTap: _scrollToBottom,
+                    onChanged: (_) => _scrollToBottom(),
+                    onTapOutside: (_) {
+                      _focusNode.unfocus();
                     },
                   ),
-                ],
-              ),
+                ),
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _controller,
+                  builder: (context, value, child) {
+                    return value.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.send),
+                            color: Colors.teal,
+                            onPressed: () {
+                              _sendMessage();
+                              _focusNode.requestFocus();
+                            },
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.emoji_emotions),
+                            color: Colors.teal,
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                          );
+                  },
+                ),
+              ],
             ),
           ),
         ],
