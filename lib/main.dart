@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:still/screens/about.dart';
 import 'package:still/screens/chatbot_interface.dart';
+import 'package:still/screens/intro.dart';
+import 'package:still/screens/privacy.dart';
 import 'package:still/screens/settings.dart';
+import 'package:still/screens/terms.dart';
 import 'package:still/utils/theme_provider.dart';
 
 Future<void> main() async {
@@ -32,7 +37,7 @@ class MainApp extends StatelessWidget {
           ),
           darkTheme: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.deepPurple,
+              seedColor: Colors.teal,
               brightness: Brightness.dark,
             ),
             textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
@@ -40,7 +45,12 @@ class MainApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
           home: const HomePage(),
           routes: {
+            '/intro': (context) => IntroPage(),
+            '/main': (context) => const ChatbotInterface(),
             '/settings': (context) => const SettingsScreen(),
+            '/terms': (context) => const TermsScreen(),
+            '/privacy': (context) => const PrivacyScreen(),
+            '/about': (context) => const AboutScreen(),
           },
         );
       },
@@ -48,33 +58,39 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isFirstTime = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstTime();
+  }
+
+  Future<void> _checkFirstTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    if (isFirstTime) {
+      await prefs.setBool('isFirstTime', false);
+    }
+
+    setState(() {
+      _isFirstTime = isFirstTime;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(45.0),
-        child: AppBar(
-          centerTitle: true,
-          title: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-            child: const Text(
-              'still.ai',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                letterSpacing: BorderSide.strokeAlignOutside,
-              ),
-            ),
-          ),
-          forceMaterialTransparency: true,
-        ),
-      ),
-      body: const ChatbotInterface(),
+      body: _isFirstTime ? IntroPage() : const ChatbotInterface(),
     );
   }
 }

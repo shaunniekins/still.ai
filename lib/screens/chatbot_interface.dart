@@ -137,103 +137,131 @@ Remember, you're here to offer support and information about mental health, not 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: GestureDetector(
-      onTap: () {
-        _focusNode.unfocus();
-      },
-      child: Container(
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Expanded(
-              child: _messages.isEmpty
-                  ? const Center(
-                      child: Text(
-                        "What's on your mind?",
-                        style: TextStyle(
-                          fontSize: 23,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController,
-                      itemCount: _messages.length + (_isTyping ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < _messages.length) {
-                          return _messages[index];
-                        } else {
-                          return const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TypingIndicator(),
-                          );
-                        }
-                      },
-                    ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      maxLines: 3,
-                      minLines: 1,
-                      textInputAction: TextInputAction.newline,
-                      keyboardType: TextInputType.multiline,
-                      style: const TextStyle(fontSize: 14.0),
-                      decoration: const InputDecoration(
-                        hintText: "Share your thoughts",
-                        counterText: '',
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        fillColor: Colors.transparent,
-                        filled: true,
-                      ),
-                      onSubmitted: (value) {
-                        _focusNode.requestFocus();
-                      },
-                      onTapAlwaysCalled: true,
-                      onTap: _scrollToBottom,
-                      onChanged: (_) => _scrollToBottom(),
+    return PopScope(
+        canPop: false,
+        child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(45.0),
+              child: AppBar(
+                centerTitle: true,
+                title: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/settings');
+                  },
+                  child: const Text(
+                    'still.ai',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      letterSpacing: BorderSide.strokeAlignOutside,
                     ),
                   ),
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: _controller,
-                    builder: (context, value, child) {
-                      return value.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.send),
-                              color: Colors.teal,
-                              onPressed: () {
-                                _sendMessage();
-                                _focusNode.requestFocus();
-                              },
-                            )
-                          : const SizedBox();
-                    },
-                  ),
-                ],
+                ),
+                automaticallyImplyLeading: false,
+                forceMaterialTransparency: true,
               ),
             ),
-          ],
-        ),
-      ),
-    ));
+            body: GestureDetector(
+              onTap: () {
+                _focusNode.unfocus();
+              },
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _messages.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "What's on your mind?",
+                                style: TextStyle(
+                                  fontSize: 23,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              controller: _scrollController,
+                              itemCount: _messages.length + (_isTyping ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                if (index < _messages.length) {
+                                  return _messages[index];
+                                } else {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TypingIndicator(),
+                                  );
+                                }
+                              },
+                            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              focusNode: _focusNode,
+                              maxLines: 3,
+                              minLines: 1,
+                              textInputAction: TextInputAction.newline,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(fontSize: 14.0),
+                              decoration: const InputDecoration(
+                                hintText: "Share your thoughts",
+                                counterText: '',
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 0.0),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.teal),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: Colors.teal),
+                                ),
+                                fillColor: Colors.transparent,
+                                filled: true,
+                              ),
+                              onSubmitted: (value) {
+                                _focusNode.requestFocus();
+                              },
+                              onTapAlwaysCalled: true,
+                              onTap: _scrollToBottom,
+                              onChanged: (_) => _scrollToBottom(),
+                            ),
+                          ),
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _controller,
+                            builder: (context, value, child) {
+                              return value.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.send),
+                                      color: Colors.teal,
+                                      onPressed: () {
+                                        _sendMessage();
+                                        _focusNode.requestFocus();
+                                      },
+                                    )
+                                  : const SizedBox();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 
   @override

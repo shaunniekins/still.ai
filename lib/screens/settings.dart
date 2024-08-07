@@ -21,17 +21,24 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
+            title: const Text('Terms of Service'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.pushNamed(context, '/terms');
+            },
+          ),
+          ListTile(
             title: const Text('Privacy'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // Navigate to privacy settings
+              Navigator.pushNamed(context, '/privacy');
             },
           ),
           ListTile(
             title: const Text('About'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // Navigate to about page
+              Navigator.pushNamed(context, '/about');
             },
           ),
         ],
