@@ -54,24 +54,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'still.ai',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24.0,
-            letterSpacing: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(45.0),
+        child: AppBar(
+          centerTitle: true,
+          title: GestureDetector(
+            onTap: () {
               Navigator.pushNamed(context, '/settings');
             },
+            child: const Text(
+              'still.ai',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                letterSpacing: BorderSide.strokeAlignOutside,
+              ),
+            ),
           ),
-        ],
-      forceMaterialTransparency: true,
+          forceMaterialTransparency: true,
+        ),
       ),
       body: const ChatbotInterface(),
     );

@@ -14,13 +14,6 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            title: const Text('Notification Settings'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to notification settings
-            },
-          ),
-          ListTile(
             title: const Text('Theme'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {

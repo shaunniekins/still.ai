@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:still/models/mood.dart';
 import 'package:still/widgets/chat_message.dart';
 import 'package:still/widgets/typing_indicator.dart';
 
@@ -57,6 +56,8 @@ Rules:
 4. Provide empathetic and supportive responses.
 5. Encourage seeking professional help when appropriate.
 6. Do not diagnose or provide medical advice.
+7. Maintain a friendly and approachable tone in all responses.
+8. Use techniques from Cognitive Behavioral Therapy (CBT), Dialectical Behavioral Therapy (DBT), and Acceptance and Commitment Therapy (ACT) without explicitly naming them.
 
 Remember, you're here to offer support and information about mental health, not to replace professional care.'''),
       Content.model([
@@ -64,6 +65,13 @@ Remember, you're here to offer support and information about mental health, not 
             "Understood. I'm here to provide support and information related to mental health, emotions, and well-being. I'll focus our conversations on these topics and offer empathetic responses. How can I assist you with your mental health or emotional concerns today?"),
       ]),
     ];
+
+    setState(() {
+      _messages.add(const ChatMessage(
+        text: "What's up? How are you doing?",
+        isUser: false,
+      ));
+    });
   }
 
   void _sendMessage() async {
@@ -103,7 +111,7 @@ Remember, you're here to offer support and information about mental health, not 
       } catch (e) {
         print('Error generating response: $e');
         setState(() {
-          _isTyping = false; // Hide typing indicator
+          _isTyping = false;
           _messages.add(const ChatMessage(
             text:
                 'I apologize, but I encountered an error. Can we refocus on how you\'re feeling or any mental health concerns you\'d like to discuss?',
@@ -126,19 +134,6 @@ Remember, you're here to offer support and information about mental health, not 
       }
     });
   }
-
-  final List<Mood> moods = [
-    Mood(mood: 'Angry', icon: Icons.sentiment_very_dissatisfied),
-    Mood(mood: 'Anxious', icon: Icons.sentiment_dissatisfied),
-    Mood(mood: 'Disgusted', icon: Icons.sentiment_very_dissatisfied),
-    Mood(mood: 'Embarrassed', icon: Icons.sentiment_neutral),
-    Mood(mood: 'Bored', icon: Icons.sentiment_neutral),
-    Mood(mood: 'Envious', icon: Icons.sentiment_dissatisfied),
-    Mood(mood: 'Excited', icon: Icons.sentiment_very_satisfied),
-    Mood(mood: 'Fearful', icon: Icons.sentiment_dissatisfied),
-    Mood(mood: 'Happy', icon: Icons.sentiment_very_satisfied),
-    Mood(mood: 'Sad', icon: Icons.sentiment_dissatisfied),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +174,7 @@ Remember, you're here to offer support and information about mental health, not 
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
               child: Row(
                 children: [
                   Expanded(
@@ -190,9 +185,11 @@ Remember, you're here to offer support and information about mental health, not 
                       minLines: 1,
                       textInputAction: TextInputAction.newline,
                       keyboardType: TextInputType.multiline,
+                      style: const TextStyle(fontSize: 14.0),
                       decoration: const InputDecoration(
-                        hintText: "Say something",
+                        hintText: "Share your thoughts",
                         counterText: '',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
@@ -227,14 +224,7 @@ Remember, you're here to offer support and information about mental health, not 
                                 _focusNode.requestFocus();
                               },
                             )
-                          : IconButton(
-                              icon: const Icon(Icons.emoji_emotions),
-                              color: Colors.teal,
-                              onPressed: () {
-                                _focusNode.unfocus();
-                                _showMoodDialog(context);
-                              },
-                            );
+                          : const SizedBox();
                     },
                   ),
                 ],
@@ -252,86 +242,5 @@ Remember, you're here to offer support and information about mental health, not 
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _showMoodDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('What are you feeling?'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: moods.map((mood) {
-                return ListTile(
-                  leading: Icon(mood.icon),
-                  title: Text(mood.mood),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _sendMoodMessage(mood.mood);
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _sendMoodMessage(String mood) {
-    String message = "I'm currently feeling $mood. ";
-
-    // Customize the message based on the mood
-    switch (mood.toLowerCase()) {
-      case 'angry':
-        message += "I'm having a hard time managing my anger right now.";
-        break;
-      case 'anxious':
-        message += "I'm feeling worried and uneasy about things.";
-        break;
-      case 'disgusted':
-        message +=
-            "Something is really bothering me and making me feel repulsed.";
-        break;
-      case 'embarrassed':
-        message +=
-            "I'm feeling self-conscious and uncomfortable about something that happened.";
-        break;
-      case 'bored':
-        message += "I'm feeling uninspired and lacking motivation.";
-        break;
-      case 'envious':
-        message += "I'm struggling with feelings of jealousy towards others.";
-        break;
-      case 'excited':
-        message +=
-            "I'm feeling really enthusiastic and energetic about something.";
-        break;
-      case 'fearful':
-        message +=
-            "I'm experiencing a sense of fear or apprehension about something.";
-        break;
-      case 'happy':
-        message += "I'm in a good mood and feeling positive about things.";
-        break;
-      case 'sad':
-        message += "I'm feeling down and experiencing a sense of sorrow.";
-        break;
-      default:
-        message += "Can you help me explore these feelings?";
-    }
-
-    _controller.text = message;
-    _scrollToBottom();
-    _sendMessage();
   }
 }
